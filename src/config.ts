@@ -3,12 +3,12 @@ export = {
     NODE_ENV: 'dev',
     JWT_KEY: 'asdf',
     database: {
-        dbName: 'test',
-        host: 'localhost',
+        dbName: 'zhuoming',
+        host: 'rm-bp109nercxd21hk93jo.mysql.rds.aliyuncs.com',
         port: 3306,
-        user: 'root',
-        password: 'lover271997',
-        sequelizeSync: true
+        user: 'faiyuching',
+        password: 'Lover271997',
+        sequelizeSync: false
     },
     wx: {
         appId: '',

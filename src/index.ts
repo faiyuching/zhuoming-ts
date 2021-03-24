@@ -33,7 +33,7 @@ const testConnection = async () => {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
-        app.listen(3000, () => {
+        app.listen(80, () => {
             console.log('Listening on port 3000');
         });
     } catch (error) {

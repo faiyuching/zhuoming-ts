@@ -29,7 +29,12 @@ app.all('*', async (req, res) => {
 
 app.use(errorHandler);
 
-const testConnection = async () => {
+const start = async () => {
+
+  if (!process.env.NODE_ENV) {
+    throw new Error('NODE_ENV must be defined');
+  }
+
   try {
     await sequelize.authenticate();
     console.log('Connection has been established successfully.');
@@ -41,6 +46,6 @@ const testConnection = async () => {
   }
 };
 
-testConnection();
+start();
 
 

@@ -3,15 +3,14 @@ import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { validateRequest, BadRequestError } from '@sgtickets/common';
 import { Password } from '../../services/password'
-
 import { User } from '../../models/user';
-
+import { config } from '../../config';
 const router = express.Router();
 
 router.post(
   '/user/signup',
   [
-    // body('email').isEmail().withMessage('Email must be valid'),
+    body('email').isEmail().withMessage('Email must be valid'),
     body('password')
       .trim()
       .isLength({ min: 4, max: 20 })
@@ -19,27 +18,27 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ where: { username: username } });
+    const existingUser = await User.findOne({ where: { email: email } });
 
     if (existingUser) {
-      throw new BadRequestError('username in use');
+      throw new BadRequestError('email in use');
     }
 
     // const user = User.build({ email, password });
     // await user.save();
 
     const hashedPassword = await Password.toHash(password);
-    const user = await User.create({ username, password: hashedPassword });
+    const user = await User.create({ email, password: hashedPassword });
 
     // Generate JWT
     const userJwt = jwt.sign(
       {
         id: user.id,
-        username: user.username,
+        email: user.email,
       },
-      process.env.JWT_KEY!
+      config.JWT_KEY!
     );
 
     // Store it on session object

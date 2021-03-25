@@ -13,16 +13,9 @@ import { currentUserRouter } from './routes/user/current-user';
 const app = express();
 app.set('trust proxy', true);
 app.use(json());
-// app.use(
-//   cookieSession({
-//     signed: false,
-//     secure: process.env.NODE_ENV !== 'test',
-//   })
-// );
 app.use(cookieSession({
-  name: 'session',
-  keys: ['key1', 'key2'],
-  secure: process.env.NODE_ENV !== 'test',
+  signed: false,
+  secure: process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'dev',
 }))
 
 app.use(signupRouter);

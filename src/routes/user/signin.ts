@@ -2,16 +2,15 @@ import express, { Request, Response } from 'express';
 import { body } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { validateRequest, BadRequestError } from '@sgtickets/common';
-
 import { Password } from '../../services/password';
 import { User } from '../../models/user';
-
+import { config } from '../../config';
 const router = express.Router();
 
 router.post(
   '/user/signin',
   [
-    // body('email').isEmail().withMessage('Email must be valid'),
+    body('email').isEmail().withMessage('Email must be valid'),
     body('password')
       .trim()
       .notEmpty()
@@ -19,9 +18,9 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ where: { username: username } });
+    const existingUser = await User.findOne({ where: { email: email } });
     if (!existingUser) {
       throw new BadRequestError('Invalid credentials');
     }
@@ -38,9 +37,9 @@ router.post(
     const userJwt = jwt.sign(
       {
         id: existingUser.id,
-        username: existingUser.username,
+        email: existingUser.email,
       },
-      process.env.JWT_KEY!
+      config.JWT_KEY!
     );
 
     // Store it on session object

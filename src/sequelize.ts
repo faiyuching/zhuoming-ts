@@ -1,18 +1,11 @@
 import { Sequelize } from "sequelize";
 
-const {
-    dbName,
-    host,
-    port,
-    user,
-    password,
-    sequelizeSync
-} = require('./config').database
+const { config } = require('./config')
 
-const sequelize = new Sequelize(dbName, user, password, {
+const sequelize = new Sequelize(config.dbName, config.user, config.password, {
     dialect: 'mysql',
-    host,
-    port,
+    host: config.host,
+    port: config.port,
     logging: false,
     timezone: '+08:00',
     define: {
@@ -21,7 +14,7 @@ const sequelize = new Sequelize(dbName, user, password, {
 });
 
 sequelize.sync({
-    force: sequelizeSync
+    force: config.sequelizeSync
 })
 
 export { sequelize }
